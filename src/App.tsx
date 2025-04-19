@@ -1,12 +1,15 @@
-import "./App.css";
+import Board from "./components/board/Board";
+import Header from "./components/layout/Header";
 
-function App() {
-
+const App = () => {
     return (
-        <>
-            hello
-        </>
+        <main className="bg-slate-300 w-screen h-screen">
+            <Header />
+            <div className="mt-6">
+                <Board />
+            </div>
+        </main>
     );
-}
+};
 
 export default App;
