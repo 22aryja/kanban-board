@@ -1,7 +1,7 @@
-type Tag = { color: string; text: string };
+import { Tag as ITag } from "@/types/board";
 
 type TagProps = {
-    tag: Tag;
+    tag: ITag;
 };
 
 export const Tag: React.FC<TagProps> = ({ tag }) => {
