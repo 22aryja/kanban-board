@@ -1,5 +1,7 @@
 import Modal from "@/components/ui-mods/Modal";
 import { Button } from "@/components/ui/button";
+import { useBoardsStore } from "@/store/board";
+import { Board } from "@/types/board";
 import { StateControl } from "@/types/common";
 
 type DeleteBoardModalProps = {
@@ -9,6 +11,10 @@ type DeleteBoardModalProps = {
 const DeleteBoardModal: React.FC<DeleteBoardModalProps> = ({
     stateControl,
 }) => {
+    const currentBoard = useBoardsStore((state) => state.currentBoard);
+    const setCurrentBoard = useBoardsStore((state) => state.setCurrentBoard);
+    const boards = useBoardsStore((state) => state.boards);
+    const setBoards = useBoardsStore((state) => state.setBoards);
     const { setOpen } = stateControl;
 
     const handleCancel = () => {
@@ -16,6 +22,18 @@ const DeleteBoardModal: React.FC<DeleteBoardModalProps> = ({
     };
 
     const handleDelete = () => {
+        if (!currentBoard) return;
+        const filteredBoards: Board[] = boards.filter(
+            (board: Board) => board.id !== currentBoard.id
+        );
+
+        setBoards(filteredBoards);
+
+        if (filteredBoards.length === 0) {
+            setCurrentBoard(null);
+        } else {
+            setCurrentBoard(filteredBoards[filteredBoards.length - 1]);
+        }
         setOpen(false);
     };
 

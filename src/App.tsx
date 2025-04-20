@@ -3,12 +3,17 @@ import Header, { HeaderRef } from "./components/layout/Header";
 import Plus from "@/assets/icons/plus.svg?react";
 import { Board as IBoard } from "./types/board";
 import { Button } from "./components/ui/button";
-import { useRef } from "react";
-
-const boards: IBoard[] = [];
+import { useEffect, useRef } from "react";
+import { useBoardsStore } from "./store/board";
 
 const App = () => {
+    const boards = useBoardsStore((state) => state.boards);
+    const currentBoard = useBoardsStore((state) => state.currentBoard);
     const headerRef = useRef<HeaderRef>(null);
+
+    useEffect(() => {
+        console.log(boards);
+    }, [boards]);
 
     const openCreateModal = () => {
         if (headerRef.current) {
@@ -20,10 +25,8 @@ const App = () => {
         <main className="bg-slate-300 w-screen h-screen flex flex-col gap-6">
             <Header ref={headerRef} />
 
-            {boards.length > 0 ? (
-                boards.map((board: IBoard) => (
-                    <Board key={board.id} board={board} />
-                ))
+            {currentBoard ? (
+                <Board board={currentBoard} />
             ) : (
                 <section className="w-full h-full flex justify-center items-center">
                     <Button onClick={openCreateModal}>
