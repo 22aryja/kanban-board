@@ -1,7 +1,6 @@
 import Board from "./components/board/Board";
 import Header, { HeaderRef } from "./components/layout/Header";
 import Plus from "@/assets/icons/plus.svg?react";
-import { Board as IBoard } from "./types/board";
 import { Button } from "./components/ui/button";
 import { useEffect, useRef } from "react";
 import { useBoardsStore } from "./store/board";
