@@ -4,7 +4,7 @@ import Plus from "@/assets/icons/plus.svg?react";
 
 export const Column = () => {
     return (
-        <section className="flex w-fit bg-slate-400 p-2 flex-col items-center justify-center rounded-md">
+        <section className="flex bg-slate-400 p-2 flex-col items-center justify-center rounded-md">
             <h1 className="text-left font-medium text-sm text-slate-800 w-full p-1">
                 Current Tasks
             </h1>

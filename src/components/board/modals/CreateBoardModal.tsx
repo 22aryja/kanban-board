@@ -6,16 +6,22 @@ import { useState } from "react";
 
 type CreateBoardModalProps = {
     stateControl: StateControl;
+    forEdit?: boolean;
 };
 
 const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
     stateControl,
+    forEdit = false,
 }) => {
     const [boardName, setBoardName] = useState<string>("");
 
     const handleClick = () => {
         const { setOpen } = stateControl;
         setOpen(false);
+    };
+
+    const applyText = (): string => {
+        return forEdit ? "Edit" : "Create";
     };
 
     return (
@@ -30,7 +36,7 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
                 />
 
                 <div className="flex w-full justify-center">
-                    <Button onClick={handleClick}>Create</Button>
+                    <Button onClick={handleClick}>{applyText()}</Button>
                 </div>
             </div>
         </Modal>
