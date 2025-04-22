@@ -10,6 +10,7 @@ export type Task = {
 export type Column = {
     id: number;
     name: string;
+    isCompleted: boolean;
     tasks: Task[];
 };
 
