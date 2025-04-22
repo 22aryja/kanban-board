@@ -1,4 +1,4 @@
-import { generateId } from "@/lib/utils";
+import { generateId, getLastIdFrom } from "@/lib/utils";
 import { Board, Column, Tag, Task } from "@/types/board";
 import { create } from "zustand";
 
@@ -10,8 +10,8 @@ type Entities = {
 };
 
 type CurrentBoard = {
-    currentBoardId: number | null;
-    setCurrentBoard: (boardId: number | null) => void;
+    currentBoardId: number;
+    setCurrentBoardId: (boardId: number) => void;
 };
 
 type CRUD = {
@@ -22,7 +22,7 @@ type CRUD = {
 
     // Column
     createColumn: (boardId: number, name: string) => void;
-    updateColumn: (id: number, updates: Partial<Column>) => void;
+    updateColumn: (id: number, name: string) => void;
     deleteColumn: (id: number) => void;
 
     // Task
@@ -48,18 +48,20 @@ export const useBoardsStore = create<BoardStore>((set, get) => ({
     tasks: {},
     tags: {},
 
-    currentBoardId: null,
-    setCurrentBoard: (id) => set({ currentBoardId: id }),
+    currentBoardId: 0,
+    setCurrentBoardId: (boardId: number) => set({ currentBoardId: boardId }),
 
     // BOARD
     createBoard: (name) => {
-        const state = get();
-        const newId = generateId(Object.values(state.boards));
+        const state: BoardStore = get();
+        const newId: number = generateId(Object.values(state.boards));
+        const newBoard: Board = { id: newId, name, columns: [] };
         set({
             boards: {
                 ...state.boards,
-                [newId]: { id: newId, name, columns: [] },
+                [newId]: newBoard,
             },
+            currentBoardId: newId,
         });
     },
 
@@ -75,7 +77,14 @@ export const useBoardsStore = create<BoardStore>((set, get) => ({
     deleteBoard: (id) => {
         set((state) => {
             const { [id]: _, ...rest } = state.boards;
-            return { boards: rest };
+            if (Object.values(rest).length > 0) {
+                return {
+                    boards: rest,
+                    currentBoardId: getLastIdFrom(rest),
+                };
+            } else {
+                return { boards: rest, currentBoardId: 0 };
+            }
         });
     },
 
@@ -86,7 +95,6 @@ export const useBoardsStore = create<BoardStore>((set, get) => ({
         const newColumn: Column = {
             id: newId,
             name,
-            isCompleted: false,
             tasks: [],
         };
 
@@ -105,18 +113,18 @@ export const useBoardsStore = create<BoardStore>((set, get) => ({
         });
     },
 
-    updateColumn: (id, updates) => {
+    updateColumn: (id, newName) => {
         set((state) => ({
             columns: {
                 ...state.columns,
-                [id]: { ...state.columns[id], ...updates },
+                [id]: { ...state.columns[id], name: newName },
             },
         }));
     },
 
     deleteColumn: (id) => {
         set((state) => {
-            const { [id]: deletedCol, ...restCols } = state.columns;
+            const { [id]: _, ...restCols } = state.columns;
 
             const updatedBoards = Object.values(state.boards).reduce(
                 (acc, board) => {

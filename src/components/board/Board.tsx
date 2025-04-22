@@ -19,14 +19,12 @@ export const Board: React.FC<BoardProps> = ({ board }) => {
         <>
             <section className="w-full h-full flex justify-evenly p-4 gap-4 overflow-auto">
                 {board.columns.map((column: IColumn) => (
-                    <Column key={column.id} column={column} />
+                    <Column key={column.id} columnId={column.id} />
                 ))}
                 <GhostColumn onClick={handleClick} />
             </section>
 
-            <CreateColumnModal
-                stateControl={{ open: open, setOpen }}
-            />
+            <CreateColumnModal stateControl={{ open: open, setOpen }} />
         </>
     );
 };

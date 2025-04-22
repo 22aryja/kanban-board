@@ -1,9 +1,7 @@
 import InputWithLabel from "@/components/ui-mods/InputWithLabel";
 import Modal from "@/components/ui-mods/Modal";
 import { Button } from "@/components/ui/button";
-import { generateId } from "@/lib/utils";
 import { useBoardsStore } from "@/store/board";
-import { Board } from "@/types/board";
 import { StateControl } from "@/types/common";
 import { useEffect, useState } from "react";
 
@@ -17,47 +15,26 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({
     forEdit = false,
 }) => {
     const boards = useBoardsStore((state) => state.boards);
-    const currentBoard = useBoardsStore((state) => state.currentBoard);
-    const setBoards = useBoardsStore((state) => state.setBoards);
-    const setCurrentBoard = useBoardsStore((state) => state.setCurrentBoard);
+    const currentBoardId = useBoardsStore((state) => state.currentBoardId);
+    const createBoard = useBoardsStore((state) => state.createBoard);
+    const updateBoard = useBoardsStore((state) => state.updateBoard);
     const [boardName, setBoardName] = useState<string>("");
 
     useEffect(() => {
-        if (!currentBoard) return;
-
         if (forEdit) {
-            setBoardName(currentBoard.name);
+            setBoardName(boards[currentBoardId].name);
         } else {
             setBoardName("");
         }
-    }, [currentBoard, forEdit]);
+    }, [boards, currentBoardId, forEdit]);
 
     const handleClick = () => {
         const { setOpen } = stateControl;
 
         if (forEdit) {
-            if (!currentBoard) return;
-            const boardWithNewName: Board = {
-                ...currentBoard,
-                name: boardName,
-            };
-            const newBoards = boards.map((board: Board) => {
-                if (board.id === currentBoard.id) {
-                    return boardWithNewName;
-                } else {
-                    return board;
-                }
-            });
-            setBoards(newBoards);
-            setCurrentBoard(boardWithNewName);
+            updateBoard(currentBoardId, boardName);
         } else {
-            const newBoard: Board = {
-                id: generateId(boards),
-                name: boardName,
-                columns: [],
-            };
-            setBoards([...boards, newBoard]);
-            setCurrentBoard(newBoard);
+            createBoard(boardName);
         }
         setBoardName("");
         setOpen(false);

@@ -1,49 +1,22 @@
-import { Button } from "@/components/ui/button";
-import Task from "../task/Task";
-import Plus from "@/assets/icons/plus.svg?react";
-import { Board, Column as IColumn } from "@/types/board";
 import More from "@/assets/icons/more.svg?react";
+import Plus from "@/assets/icons/plus.svg?react";
 import Dropdown from "@/components/ui-mods/Dropdown";
-import { useMemo, useState } from "react";
-import { DropdownOption } from "@/types/common";
+import { Button } from "@/components/ui/button";
 import { useBoardsStore } from "@/store/board";
+import { DropdownOption } from "@/types/common";
+import { useMemo, useState } from "react";
 import CreateColumnModal from "../modals/CreateColumnModal";
+import Task from "../task/Task";
 
 type ColumnProps = {
-    column: IColumn;
+    columnId: number;
 };
 
-export const Column: React.FC<ColumnProps> = ({ column }) => {
+export const Column: React.FC<ColumnProps> = ({ columnId }) => {
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-    const boards = useBoardsStore((state) => state.boards);
-    const setBoards = useBoardsStore((state) => state.setBoards);
-    const currentBoard = useBoardsStore((state) => state.currentBoard);
-    const setCurrentBoard = useBoardsStore((state) => state.setCurrentBoard);
-
-    const deleteColumn = () => {
-        if (!currentBoard) return;
-
-        const index: number = boards.indexOf(currentBoard);
-
-        const updatedBoards = boards.map((board: Board) => {
-            if (board.id === currentBoard.id) {
-                const newColumns: IColumn[] = board.columns.filter(
-                    (col: IColumn) => col.id !== column.id
-                );
-
-                return {
-                    ...board,
-                    columns: newColumns,
-                };
-            } else {
-                return board;
-            }
-        });
-
-        setBoards(updatedBoards);
-        setCurrentBoard(updatedBoards[index]);
-    };
+    const columns = useBoardsStore((state) => state.columns);
+    const deleteColumn = useBoardsStore((state) => state.deleteColumn);
 
     const options: DropdownOption[] = useMemo(
         () => [
@@ -53,7 +26,7 @@ export const Column: React.FC<ColumnProps> = ({ column }) => {
             },
             {
                 label: "Delete",
-                onClick: deleteColumn,
+                onClick: () => deleteColumn(columnId),
             },
         ],
         []
@@ -64,7 +37,7 @@ export const Column: React.FC<ColumnProps> = ({ column }) => {
             <section className="flex bg-slate-400 p-2 flex-col items-center justify-center rounded-md h-fit">
                 <header className="flex w-full justify-between items-center">
                     <h1 className="text-left font-medium text-sm text-slate-800 w-full p-1">
-                        {column.name}
+                        {columns[columnId].name}
                     </h1>
                     <Dropdown
                         stateControl={{
@@ -96,7 +69,7 @@ export const Column: React.FC<ColumnProps> = ({ column }) => {
 
             <CreateColumnModal
                 stateControl={{ open: modalOpen, setOpen: setModalOpen }}
-                columnId={column.id}
+                columnId={columnId}
             />
         </>
     );

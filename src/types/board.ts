@@ -3,14 +3,13 @@ export type Tag = { color: string; text: string };
 export type Task = {
     id: number;
     title: string;
-    description: string;
+    isCompleted: boolean;
     tags: Tag[];
 };
 
 export type Column = {
     id: number;
     name: string;
-    isCompleted: boolean;
     tasks: Task[];
 };
 

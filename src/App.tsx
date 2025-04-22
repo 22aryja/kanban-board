@@ -7,7 +7,7 @@ import { useBoardsStore } from "./store/board";
 
 const App = () => {
     const boards = useBoardsStore((state) => state.boards);
-    const currentBoard = useBoardsStore((state) => state.currentBoard);
+    const currentBoardId = useBoardsStore((state) => state.currentBoardId);
     const headerRef = useRef<HeaderRef>(null);
 
     useEffect(() => {
@@ -24,8 +24,8 @@ const App = () => {
         <main className="bg-slate-300 w-screen h-screen flex flex-col gap-6">
             <Header ref={headerRef} />
 
-            {currentBoard ? (
-                <Board board={currentBoard} />
+            {boards[currentBoardId] ? (
+                <Board board={boards[currentBoardId]} />
             ) : (
                 <section className="w-full h-full flex justify-center items-center">
                     <Button onClick={openCreateModal}>

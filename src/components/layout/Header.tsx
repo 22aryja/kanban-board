@@ -19,8 +19,8 @@ type HeaderProps = {
 
 export const Header: React.FC<HeaderProps> = ({ ref }) => {
     const boards = useBoardsStore((state) => state.boards);
-    const currentBoard = useBoardsStore((state) => state.currentBoard);
-    const setCurrentBoard = useBoardsStore((state) => state.setCurrentBoard);
+    const currentBoardId = useBoardsStore((state) => state.currentBoardId);
+    const setCurrentBoard = useBoardsStore((state) => state.setCurrentBoardId);
     const [open, setOpen] = useState<{
         create: boolean;
         edit: boolean;
@@ -82,10 +82,10 @@ export const Header: React.FC<HeaderProps> = ({ ref }) => {
     }, []);
 
     const boardsOptions: DropdownOption[] = useMemo(() => {
-        const options = boards.map((board: Board) => {
+        const options = Object.values(boards).map((board: Board) => {
             return {
                 label: board.name,
-                onClick: () => setCurrentBoard(board),
+                onClick: () => setCurrentBoard(board.id),
             };
         });
         return options;
@@ -97,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({ ref }) => {
                 <h1 className="text-2xl font-semibold text-accent">Kanban</h1>
                 <div className="w-full absolute flex justify-center left-0 top-0 items-center h-full pointer-events-none">
                     <h1 className="text-2xl font-semibold text-accent">
-                        {currentBoard ? currentBoard.name : ""}
+                        {currentBoardId ? boards[currentBoardId].name : ""}
                     </h1>
                 </div>
                 <div className="flex gap-4 items-center">

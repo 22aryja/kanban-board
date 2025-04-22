@@ -13,3 +13,10 @@ export const generateId = (arr: { id: number }[]): number => {
         return idOfTheLastElement + 1;
     }
 };
+
+export const getLastIdFrom = (obj: Record<number, unknown>): number => {
+    const arr: string[] = Object.keys(obj);
+    const amount: number = Object.keys(obj).length;
+
+    return parseInt(arr[amount - 1]);
+};
