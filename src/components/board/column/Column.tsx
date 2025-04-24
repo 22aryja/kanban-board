@@ -7,6 +7,7 @@ import { DropdownOption } from "@/types/common";
 import { useMemo, useState } from "react";
 import CreateColumnModal from "../modals/CreateColumnModal";
 import Task from "../task/Task";
+import { Task as ITask } from "@/types/board";
 
 type ColumnProps = {
     columnId: number;
@@ -16,7 +17,12 @@ export const Column: React.FC<ColumnProps> = ({ columnId }) => {
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const columns = useBoardsStore((state) => state.columns);
+    const createDraft = useBoardsStore((state) => state.createDraft);
     const deleteColumn = useBoardsStore((state) => state.deleteColumn);
+
+    const handleCreate = () => {
+        createDraft(columnId);
+    };
 
     const options: DropdownOption[] = useMemo(
         () => [
@@ -53,12 +59,20 @@ export const Column: React.FC<ColumnProps> = ({ columnId }) => {
                     </Dropdown>
                 </header>
                 <div className="flex flex-col gap-2">
-                    {Array.from({ length: 5 }).map((_, i: number) => (
-                        <Task key={i} />
+                    {columns[columnId].tasks.map((task: ITask) => (
+                        <Task
+                            key={task.id}
+                            columnId={columnId}
+                            taskId={task.id}
+                        />
                     ))}
                 </div>
                 <footer className="w-full p-1">
-                    <Button variant="ghost" className="p-0 hover:bg-slate-400">
+                    <Button
+                        variant="ghost"
+                        className="p-0 hover:bg-slate-400"
+                        onClick={handleCreate}
+                    >
                         <Plus className="w-4 h-4 text-slate-800" />
                         <h1 className="text-left font-medium text-sm text-slate-800 ">
                             Add task

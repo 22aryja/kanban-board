@@ -1,4 +1,4 @@
-import { generateId, getLastIdFrom } from "@/lib/utils";
+import { generateId, generateNegativeId, getLastIdFrom } from "@/lib/utils";
 import { Board, Column, Tag, Task } from "@/types/board";
 import { create } from "zustand";
 
@@ -26,7 +26,8 @@ type CRUD = {
     deleteColumn: (id: number) => void;
 
     // Task
-    createTask: (columnId: number, task: Omit<Task, "id">) => void;
+    createDraft: (columnId: number) => void;
+    createTask: (columnId: number, name: string) => void;
     updateTask: (id: number, updates: Partial<Task>) => void;
     deleteTask: (id: number) => void;
 
@@ -142,10 +143,39 @@ export const useBoardsStore = create<BoardStore>((set, get) => ({
     },
 
     // TASK
-    createTask: (columnId, taskData) => {
+    createDraft: (columnId) => {
+        const state = get();
+        const draftId = generateNegativeId(Object.values(state.tasks));
+        const newTask: Task = {
+            id: draftId,
+            title: "",
+            isCompleted: false,
+            tags: [],
+        };
+
+        set({
+            tasks: {
+                ...state.tasks,
+                [draftId]: newTask,
+            },
+            columns: {
+                ...state.columns,
+                [columnId]: {
+                    ...state.columns[columnId],
+                    tasks: [...state.columns[columnId].tasks, newTask],
+                },
+            },
+        });
+    },
+    createTask: (columnId, name) => {
         const state = get();
         const newId = generateId(Object.values(state.tasks));
-        const newTask = { ...taskData, id: newId };
+        const newTask: Task = {
+            id: newId,
+            title: name,
+            isCompleted: false,
+            tags: [],
+        };
 
         set({
             tasks: {

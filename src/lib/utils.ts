@@ -14,6 +14,18 @@ export const generateId = (arr: { id: number }[]): number => {
     }
 };
 
+export const generateNegativeId = (arr: { id: number }[]): number => {
+    let minId = 0;
+
+    for (const item of arr) {
+        if (item.id < minId) {
+            minId = item.id;
+        }
+    }
+
+    return minId - 1;
+};
+
 export const getLastIdFrom = (obj: Record<number, unknown>): number => {
     const arr: string[] = Object.keys(obj);
     const amount: number = Object.keys(obj).length;
