@@ -34,6 +34,10 @@ type CRUD = {
     // Tag
     createTag: (taskId: number, tag: Tag) => void;
     deleteTag: (taskId: number, tagText: string) => void;
+
+    moveTask: (columnId: number, tasks: Task[]) => void;
+
+    moveColumn: (columns: Column[]) => void;
 };
 
 type Derived = {
@@ -254,5 +258,26 @@ export const useBoardsStore = create<BoardStore>((set, get) => ({
 
     getTasksByColumn: (columnId) => {
         return get().columns[columnId]?.tasks ?? [];
+    },
+
+    moveTask: (columnId: number, tasks: Task[]) => {
+        set((state) => ({
+            columns: {
+                ...state.columns,
+                [columnId]: {
+                    ...state.columns[columnId],
+                    tasks,
+                },
+            },
+        }));
+    },
+
+    moveColumn: (columns: Column[]) => {
+        set((state) => ({
+            columns: columns.reduce((acc, col) => {
+                acc[col.id] = col;
+                return acc;
+            }, {} as Record<number, Column>),
+        }));
     },
 }));
