@@ -1,6 +1,7 @@
 import { generateId, generateNegativeId, getLastIdFrom } from "@/lib/utils";
 import { Board, Column, Tag, Task } from "@/types/board";
 import { create } from "zustand";
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 type Entities = {
     boards: Record<number, Board>;
@@ -47,7 +48,7 @@ type Derived = {
 
 type BoardStore = Entities & CurrentBoard & CRUD & Derived;
 
-export const useBoardsStore = create<BoardStore>((set, get) => ({
+export const useBoardsStore = create<BoardStore>()(persist((set, get) => ({
     boards: {},
     columns: {},
     tasks: {},
@@ -280,4 +281,6 @@ export const useBoardsStore = create<BoardStore>((set, get) => ({
             }, {} as Record<number, Column>),
         }));
     },
+}), {
+    name: "board-data",
 }));

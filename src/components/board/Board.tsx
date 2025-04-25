@@ -52,7 +52,6 @@ export const Board: React.FC<BoardProps> = ({ board }) => {
 
         if (active.id !== over.id) {
             if (activeType === "column") {
-                // Перемещение колонок
                 const oldIndex = board.columns.findIndex(
                     (col) => col.id === active.id
                 );
@@ -63,7 +62,6 @@ export const Board: React.FC<BoardProps> = ({ board }) => {
                 const newColumns = arrayMove(board.columns, oldIndex, newIndex);
                 moveColumn(newColumns);
             } else {
-                // Перемещение задач
                 const activeColumnId = active.data.current?.columnId;
                 const overColumnId = over.data.current?.columnId;
                 const activeTaskId = active.id as number;
@@ -115,7 +113,7 @@ export const Board: React.FC<BoardProps> = ({ board }) => {
     return (
         <>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-                <section className="w-full h-full flex justify-evenly p-4 gap-4 overflow-auto">
+                <section className="w-full h-full flex justify-evenly 2xl:p-4 gap-4 overflow-auto px-4 pt-4 pb-18">
                     <SortableContext items={board.columns.map((col) => col.id)}>
                         {board.columns.map((column: IColumn) => (
                             <SortableContext

@@ -26,7 +26,8 @@ export const AddTagModal: React.FC<AddTagModalProps> = ({
 
     useEffect(() => {
         setTagName("");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        setTagColor(null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tasks[taskId].tags.length]);
 
     const handleClick = () => {

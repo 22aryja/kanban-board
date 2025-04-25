@@ -2,12 +2,13 @@ import More from "@/assets/icons/more.svg?react";
 import Plus from "@/assets/icons/plus.svg?react";
 import { useBoardsStore } from "@/store/board";
 import { DropdownOption } from "@/types/common";
-import { Ref, useImperativeHandle, useMemo, useState } from "react";
+import { Ref, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import CreateBoardModal from "../board/modals/CreateBoardModal";
 import DeleteBoardModal from "../board/modals/DeleteBoardModal";
 import Dropdown from "../ui-mods/Dropdown";
 import { Button } from "../ui/button";
 import { Board } from "@/types/board";
+import { useCommonStore } from "@/store/common";
 
 export type HeaderRef = {
     openModal: () => void;
@@ -18,6 +19,7 @@ type HeaderProps = {
 };
 
 export const Header: React.FC<HeaderProps> = ({ ref }) => {
+    const isMobile = useCommonStore((state) => state.isMobile);
     const boards = useBoardsStore((state) => state.boards);
     const currentBoardId = useBoardsStore((state) => state.currentBoardId);
     const setCurrentBoard = useBoardsStore((state) => state.setCurrentBoardId);
@@ -95,11 +97,19 @@ export const Header: React.FC<HeaderProps> = ({ ref }) => {
         <>
             <header className="w-full bg-slate-700 p-4 flex justify-between relative">
                 <h1 className="text-2xl font-semibold text-accent">Kanban</h1>
-                <div className="w-full absolute flex justify-center left-0 top-0 items-center h-full pointer-events-none">
-                    <h1 className="text-2xl font-semibold text-accent">
-                        {currentBoardId ? boards[currentBoardId].name : ""}
-                    </h1>
-                </div>
+                {!isMobile ? (
+                    <div className="w-full absolute flex justify-center left-0 top-0 items-center h-full pointer-events-none">
+                        <h1 className="text-2xl font-semibold text-accent">
+                            {currentBoardId ? boards[currentBoardId].name : ""}
+                        </h1>
+                    </div>
+                ) : (
+                    <div className="w-full fixed flex justify-center left-0 bottom-0 items-center pointer-events-none bg-slate-700 h-12">
+                        <h1 className="text-2xl font-semibold text-accent">
+                            {currentBoardId ? boards[currentBoardId].name : ""}
+                        </h1>
+                    </div>
+                )}
                 <div className="flex gap-4 items-center">
                     <Dropdown
                         stateControl={{

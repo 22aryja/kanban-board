@@ -4,6 +4,7 @@ import Plus from "@/assets/icons/plus.svg?react";
 import { Button } from "./components/ui/button";
 import { useEffect, useRef } from "react";
 import { useBoardsStore } from "./store/board";
+import ResizeController from "./components/layout/ResizeController";
 
 const App = () => {
     const boards = useBoardsStore((state) => state.boards);
@@ -21,7 +22,8 @@ const App = () => {
     };
 
     return (
-        <main className="bg-slate-300 w-screen h-screen flex flex-col gap-6">
+        <main className="bg-slate-300 w-screen h-screen flex flex-col 2xl:gap-6 gap-2">
+            <ResizeController />
             <Header ref={headerRef} />
 
             {boards[currentBoardId] ? (
