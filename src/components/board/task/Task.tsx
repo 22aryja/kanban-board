@@ -112,7 +112,7 @@ export const Task: React.FC<TaskProps> = ({ taskId, columnId }) => {
                     isTaskCompleted ? "border-emerald-600" : ""
                 )}
             >
-                <section className="flex flex-col gap-2 bg-secondary rounded-sm p-2 min-w-[12vw] max-w-80">
+                <section className="flex flex-col gap-2 bg-secondary rounded-sm p-2 min-w-[12vw]">
                     <div className="flex justify-between w-full">
                         <div className="flex gap-1 flex-wrap items-center">
                             {tasks[taskId].tags.map((tag: ITag) => (

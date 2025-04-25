@@ -7,7 +7,7 @@ type GhostColumnProps = {
 export const GhostColumn: React.FC<GhostColumnProps> = ({ onClick }) => {
     return (
         <div
-            className="w-64 h-full flex items-center justify-center border rounded-md border-dashed border-accent bg-[#ffffff11] cursor-pointer"
+            className="w-80 h-full flex items-center justify-center border rounded-md border-dashed border-accent bg-[#ffffff11] cursor-pointer"
             onClick={onClick}
         >
             <div className="flex gap-2 items-center">
